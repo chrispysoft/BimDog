@@ -9,5 +9,14 @@
         android:id="@+id/stopListFragment"
         android:name="com.chrizz.bimdog.StopListFragment"
         android:label="stop_list_fragment"
-        tools:layout="@layout/stop_list_fragment" />
+        tools:layout="@layout/stop_list_fragment" >
+        <action
+            android:id="@+id/action_stopListFragment_to_departureListFragment"
+            app:destination="@id/departureListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/departureListFragment"
+        android:name="com.chrizz.bimdog.DepartureListFragment"
+        android:label="departure_list_fragment"
+        tools:layout="@layout/departure_list_fragment" />
 </navigation>
