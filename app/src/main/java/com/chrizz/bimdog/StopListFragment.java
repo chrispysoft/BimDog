@@ -1,5 +1,6 @@
 package com.chrizz.bimdog;
 
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,9 +22,12 @@ public class StopListFragment extends Fragment {
 	
 	
 	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		for (int i=0; i<5; i++) {
+		
+		stops.clear();
+		for (int i=1; i<=6; i++) {
 			Stop stop = new Stop();
-			stop.name = "Stop!";
+			stop.name = "Stop " + i;
+			stop.id = String.valueOf(i*1000);
 			stops.add(stop);
 		}
 		
@@ -31,8 +35,7 @@ public class StopListFragment extends Fragment {
 	}
 	
 	
-	@Override
-	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+	@Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		
 		StopListAdapter stopListAdapter = new StopListAdapter(view.getContext(), stops);
@@ -41,7 +44,9 @@ public class StopListFragment extends Fragment {
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Stop stop = (Stop) parent.getAdapter().getItem(position);
-				Navigation.findNavController(view).navigate(R.id.departureListFragment);
+				Bundle bundle = new Bundle();
+				bundle.putString("stopID", stop.id);
+				Navigation.findNavController(view).navigate(R.id.departureListFragment, bundle);
 			}
 		});
 	}

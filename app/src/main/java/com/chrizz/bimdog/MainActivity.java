@@ -13,8 +13,6 @@ public class MainActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		NavHostFragment hostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.navHostFragment);
-		NavController navController = hostFragment.getNavController();
 	}
 	
 }
