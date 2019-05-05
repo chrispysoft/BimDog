@@ -4,7 +4,6 @@ import android.content.Context;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,10 +32,15 @@ public class StopListFragment extends Fragment implements AdapterView.OnItemClic
 	
 	@Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		StopListAdapter stopListAdapter = new StopListAdapter(view.getContext(), stops);
+		
 		listView = getView().findViewById(R.id.stopListView);
-		listView.setAdapter(stopListAdapter);
+		listView.setAdapter(new StopListAdapter(view.getContext(), stops));
 		listView.setOnItemClickListener(this);
+		
+		Location currentLocation = ((MainActivity) getActivity()).currentLocation;
+		if (currentLocation != null) {
+			updateStops(currentLocation);
+		}
 	}
 	
 	public void updateStops(Location location) {
@@ -53,7 +57,6 @@ public class StopListFragment extends Fragment implements AdapterView.OnItemClic
 	
 	private class EFAClientStopRequest extends AsyncTask<Location, Void, ArrayList<EFAClient.Stop>> {
 		@Override protected ArrayList<EFAClient.Stop> doInBackground(Location... locations) {
-			Log.i("StopListFragment", "EFAClientStopRequest.doInBackground");
 			return new EFAClient().loadStops(locations[0]);
 		}
 		@Override protected void onPostExecute(ArrayList<EFAClient.Stop> result) {
@@ -63,9 +66,6 @@ public class StopListFragment extends Fragment implements AdapterView.OnItemClic
 			listView.invalidateViews();
 		}
 	}
-	
-	
-	
 	
 	
 	private class StopListAdapter extends ArrayAdapter<EFAClient.Stop> {
