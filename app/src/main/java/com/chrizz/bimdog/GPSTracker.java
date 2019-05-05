@@ -16,7 +16,7 @@ import android.provider.Settings;
 public class GPSTracker extends Service implements LocationListener {
 	
 	interface GPSTrackerListener {
-		void locationChanged(double latitude, double longitude);
+		void locationUpdated(Location location);
 	}
 	
 	GPSTrackerListener listener;
@@ -44,14 +44,14 @@ public class GPSTracker extends Service implements LocationListener {
 		return this.canGetLocation;
 	}
 	
-	public void startUpdatatingLocation() {
+	public void startUpdatingLocation() {
 		location = getLocation();
 		if (location != null) {
-			listener.locationChanged(location.getLatitude(), location.getLongitude());
+			listener.locationUpdated(location);
 		}
 	}
 	
-	public void stopUsingGPS(){
+	public void stopUpdatingLocation(){
 		if(locationManager != null){
 			locationManager.removeUpdates(GPSTracker.this);
 		}
@@ -114,7 +114,7 @@ public class GPSTracker extends Service implements LocationListener {
 	}
 	
 	@Override public void onLocationChanged(Location location) {
-		listener.locationChanged(location.getLatitude(), location.getLongitude());
+		listener.locationUpdated(location);
 	}
 	
 	@Override public void onProviderDisabled(String provider) {

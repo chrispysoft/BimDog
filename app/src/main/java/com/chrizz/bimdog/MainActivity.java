@@ -2,8 +2,8 @@ package com.chrizz.bimdog;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
 import android.Manifest;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -28,18 +28,18 @@ public class MainActivity extends AppCompatActivity {
 		
 		gpsTracker = new GPSTracker(MainActivity.this);
 		gpsTracker.listener = new GPSTracker.GPSTrackerListener() {
-			@Override public void locationChanged(double latitude, double longitude) {
+			@Override public void locationUpdated(Location location) {
 				StopListFragment stopListFragment = (StopListFragment) getSupportFragmentManager().findFragmentById(R.id.navHostFragment).getChildFragmentManager().getPrimaryNavigationFragment();
 				if (stopListFragment != null) {
-					stopListFragment.updateGPSCoordinates(latitude, longitude);
+					stopListFragment.updateStops(location);
 				}
 			}
 		};
 		
 		if (gpsTracker.canGetLocation()) {
-			gpsTracker.startUpdatatingLocation();
+			gpsTracker.startUpdatingLocation();
 		} else {
-			Log.i("Location", "Can't get Location");
+			Log.i("MainActivity", "Can't get Location");
 			gpsTracker.showSettingsAlert();
 		}
 		
