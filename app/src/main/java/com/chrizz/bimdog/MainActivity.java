@@ -2,6 +2,8 @@ package com.chrizz.bimdog;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+
 import android.Manifest;
 import android.location.Location;
 import android.os.Bundle;
@@ -38,11 +40,15 @@ public class MainActivity extends AppCompatActivity implements GPSTracker.GPSTra
 	@Override public void locationUpdated(Location location) {
 		Log.i("MainActivity", "locationUpdated");
 		currentLocation = location;
-		StopListFragment stopListFragment = (StopListFragment) getSupportFragmentManager().findFragmentById(R.id.navHostFragment).getChildFragmentManager().getPrimaryNavigationFragment();
-		if (stopListFragment != null) {
+		
+		Fragment host = getSupportFragmentManager().findFragmentById(R.id.navHostFragment);
+		Fragment primary = host.getChildFragmentManager().getPrimaryNavigationFragment();
+		if (primary instanceof StopListFragment) {
+			StopListFragment stopListFragment = (StopListFragment) primary;
 			stopListFragment.updateStops(location);
 		} else {
-			Log.i("MainActivity", "stopListFragment is null");
+			Log.i("MainActivity", "primary Fragment is not type of StopListFragment");
 		}
+		
 	}
 }
