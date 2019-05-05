@@ -59,7 +59,43 @@ public class EFAClient {
 		return stops;
 	}
 	
-	
+	public ArrayList<Departure> loadDepartures(String stopID) {
+		Builder builder = Uri.parse(baseURL).buildUpon();
+		builder.appendPath("XML_DM_REQUEST");
+		builder.appendQueryParameter("locationServerActive", "1");
+		builder.appendQueryParameter("stateless", "1");
+		builder.appendQueryParameter("outputFormat", "JSON");
+		builder.appendQueryParameter("useRealtime", "1");
+		builder.appendQueryParameter("mode", "direct");
+		builder.appendQueryParameter("type_dm", "any");
+		builder.appendQueryParameter("name_dm", stopID);
+		builder.appendQueryParameter("limit", "10");
+		Uri uri = builder.build();
+		ArrayList departures = null;
+		try {
+			URL url = new URL(uri.toString());
+			JSONObject rootObject = downloadJSONObject(url);
+			JSONArray departureArray = rootObject.getJSONArray("departureList");
+			departures = new ArrayList<Departure>();
+			for (int i=0; i<departureArray.length(); i++) {
+				JSONObject departureObject = departureArray.getJSONObject(i);
+				JSONObject servingLineObject = departureObject.getJSONObject("servingLine");
+				String platform = departureObject.getString("platform");
+				String number = servingLineObject.getString("number");
+				String direction = servingLineObject.getString("direction");
+				String countdown = departureObject.getString("countdown");
+				EFAClient.Departure departure = new EFAClient.Departure(platform, number, direction, countdown);
+				departures.add(departure);
+			}
+		}
+		catch (JSONException e) {
+			e.printStackTrace();
+		}
+		catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return departures;
+	}
 	
 	
 	private JSONObject downloadJSONObject(URL url) {
@@ -104,9 +140,9 @@ public class EFAClient {
 	}
 	
 	public class Departure {
-		public String name, countdown;
-		public Departure(String name, String countdown) {
-			this.name = name; this.countdown = countdown;
+		public String platform, number, direction, countdown;
+		public Departure(String platform, String number, String direction, String countdown) {
+			this.platform = platform; this.number = number; this.direction = direction; this.countdown = countdown;
 		}
 	}
 	

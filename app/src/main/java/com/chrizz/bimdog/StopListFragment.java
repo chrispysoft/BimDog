@@ -18,9 +18,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import java.util.ArrayList;
 import com.chrizz.bimdog.com.chrizz.bimdog.efa.EFAClient;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 
 public class StopListFragment extends Fragment implements AdapterView.OnItemClickListener {
