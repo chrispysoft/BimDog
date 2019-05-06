@@ -1,5 +1,6 @@
 package com.chrizz.bimdog;
 
+import android.Manifest;
 import android.content.Context;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -17,15 +18,28 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import java.util.ArrayList;
 import com.chrizz.bimdog.com.chrizz.bimdog.efa.EFAClient;
+import android.util.Log;
+import androidx.core.app.ActivityCompat;
 
 
-public class StopListFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class StopListFragment extends Fragment implements GPSTracker.GPSTrackerListener, AdapterView.OnItemClickListener {
 	
+	private final int REQUEST_CODE_PERMISSION = 2;
+	private final String mPermission = Manifest.permission.ACCESS_FINE_LOCATION;
+	private GPSTracker gpsTracker;
 	private ArrayList stops = new ArrayList<EFAClient.Stop>();
 	private ListView listView;
 	
 	
+	@Override public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		Log.i("StopListFragment", "onCreate");
+		gpsTracker = new GPSTracker(getActivity());
+		gpsTracker.listener = this;
+	}
+	
 	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		Log.i("StopListFragment", "onCreateView");
 		return inflater.inflate(R.layout.stop_list_fragment, container, false);
 	}
 	
@@ -33,17 +47,27 @@ public class StopListFragment extends Fragment implements AdapterView.OnItemClic
 	@Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		
+		Log.i("StopListFragment", "onViewCreated");
+		
 		listView = getView().findViewById(R.id.stopListView);
-		listView.setAdapter(new StopListAdapter(view.getContext(), stops));
+		listView.setAdapter(new StopListAdapter(getContext(), stops));
 		listView.setOnItemClickListener(this);
 		
-		Location currentLocation = ((MainActivity) getActivity()).currentLocation;
-		if (currentLocation != null) {
-			updateStops(currentLocation);
+		try {
+			ActivityCompat.requestPermissions(getActivity(), new String[]{mPermission}, REQUEST_CODE_PERMISSION);
+			if (gpsTracker.canGetLocation()) {
+				gpsTracker.startUpdatingLocation();
+			} else {
+				gpsTracker.showSettingsAlert();
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
-	public void updateStops(Location location) {
+	@Override public void locationUpdated(Location location) {
+		Log.i("StopListFragment", "locationUpdated");
 		new EFAClientStopRequest().execute(location);
 	}
 	
