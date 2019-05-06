@@ -80,18 +80,20 @@ public class StopListFragment extends Fragment implements AdapterView.OnItemClic
 				LayoutInflater inflater = LayoutInflater.from(getContext());
 				convertView = inflater.inflate(R.layout.stop_item, parent, false);
 				viewHolder.stopNameLabel = convertView.findViewById(R.id.stopNameLabel);
+				viewHolder.distanceLabel = convertView.findViewById(R.id.distanceLabel);
 				convertView.setTag(viewHolder);
 			} else {
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
 			viewHolder.stopNameLabel.setText(stop.name);
+			viewHolder.distanceLabel.setText(stop.distance + " m");
 			return convertView;
 		}
 	}
 	
 	
 	private static class ViewHolder {
-		TextView stopNameLabel;
+		TextView stopNameLabel, distanceLabel;
 	}
 	
 }
