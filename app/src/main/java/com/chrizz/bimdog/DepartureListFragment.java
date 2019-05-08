@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +23,7 @@ public class DepartureListFragment extends Fragment {
 	private String stopID;
 	private ArrayList departures = new ArrayList<EFAClient.Departure>();
 	private ListView listView;
+	private ProgressBar progressBar;
 	
 	
 	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -34,6 +36,7 @@ public class DepartureListFragment extends Fragment {
 		DepartureListAdapter departureListAdapter = new DepartureListAdapter(view.getContext(), departures);
 		listView = getView().findViewById(R.id.departureListView);
 		listView.setAdapter(departureListAdapter);
+		progressBar = getView().findViewById(R.id.progressBar);
 		updateDepartures();
 	}
 	
@@ -47,8 +50,14 @@ public class DepartureListFragment extends Fragment {
 			return new EFAClient().loadDepartures(stopIDs[0]);
 		}
 		
+		@Override
+		protected void onPreExecute() {
+			progressBar.setVisibility(View.VISIBLE);
+		}
+		
 		@Override protected void onPostExecute(ArrayList<EFAClient.Departure> result) {
 			super.onPostExecute(result);
+			progressBar.setVisibility(View.GONE);
 			departures.clear();
 			departures.addAll(result);
 			listView.invalidateViews();
