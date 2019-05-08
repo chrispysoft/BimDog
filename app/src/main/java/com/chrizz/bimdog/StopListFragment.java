@@ -1,6 +1,5 @@
 package com.chrizz.bimdog;
 
-import android.Manifest;
 import android.content.Context;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -19,51 +18,37 @@ import androidx.navigation.Navigation;
 import java.util.ArrayList;
 import com.chrizz.bimdog.com.chrizz.bimdog.efa.EFAClient;
 import android.util.Log;
-import androidx.core.app.ActivityCompat;
 
 
 public class StopListFragment extends Fragment implements GPSTracker.GPSTrackerListener, AdapterView.OnItemClickListener {
 	
-	private final int REQUEST_CODE_PERMISSION = 2;
-	private final String mPermission = Manifest.permission.ACCESS_FINE_LOCATION;
 	private GPSTracker gpsTracker;
 	private ArrayList stops = new ArrayList<EFAClient.Stop>();
 	private ListView listView;
 	
 	
-	@Override public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		Log.i("StopListFragment", "onCreate");
-		gpsTracker = new GPSTracker(getActivity());
-		gpsTracker.listener = this;
-	}
-	
 	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		Log.i("StopListFragment", "onCreateView");
 		return inflater.inflate(R.layout.stop_list_fragment, container, false);
 	}
 	
-	
 	@Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		
-		Log.i("StopListFragment", "onViewCreated");
-		
 		listView = getView().findViewById(R.id.stopListView);
 		listView.setAdapter(new StopListAdapter(getContext(), stops));
 		listView.setOnItemClickListener(this);
-		
-		try {
-			ActivityCompat.requestPermissions(getActivity(), new String[]{mPermission}, REQUEST_CODE_PERMISSION);
-			if (gpsTracker.canGetLocation()) {
-				gpsTracker.startUpdatingLocation();
-			} else {
-				gpsTracker.showSettingsAlert();
-			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+		gpsTracker = new GPSTracker(getActivity(), this);
+	}
+	
+	@Override public void onResume() {
+		super.onResume();
+		Log.i("StopListFragment", "onResume");
+		gpsTracker.startUpdatingLocation();
+	}
+	
+	@Override public void onPause() {
+		super.onPause();
+		Log.i("StopListFragment", "onPause");
+		gpsTracker.stopUpdatingLocation();
 	}
 	
 	@Override public void locationUpdated(Location location) {
@@ -93,7 +78,7 @@ public class StopListFragment extends Fragment implements GPSTracker.GPSTrackerL
 	
 	
 	private class StopListAdapter extends ArrayAdapter<EFAClient.Stop> {
-		public StopListAdapter(Context context, ArrayList<EFAClient.Stop> stops) {
+		StopListAdapter(Context context, ArrayList<EFAClient.Stop> stops) {
 			super(context, R.layout.stop_item, stops);
 		}
 		@Override public View getView(int position, View convertView, ViewGroup parent) {
