@@ -1,6 +1,9 @@
 package com.chrizz.bimdog.com.chrizz.bimdog.efa;
 
+import android.content.Context;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri.Builder;
 import android.net.Uri;
 
@@ -22,6 +25,13 @@ import java.util.Locale;
 public class EFAClient {
 	
 	private final String baseURL = "https://www.linzag.at/static/";
+	
+	
+	public static Boolean canAccessNetwork(Context context) {
+		ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo info = manager.getActiveNetworkInfo();
+		return info != null && info.isConnected();
+	}
 	
 	
 	public ArrayList<Stop> loadStops(Location location) {

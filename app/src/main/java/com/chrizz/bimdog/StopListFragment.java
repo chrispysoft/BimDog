@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import java.util.ArrayList;
@@ -53,7 +54,14 @@ public class StopListFragment extends Fragment implements GPSTracker.GPSTrackerL
 	
 	@Override public void locationUpdated(Location location) {
 		Log.i("StopListFragment", "locationUpdated");
-		new EFAClientStopRequest().execute(location);
+		if (EFAClient.canAccessNetwork(getActivity())) {
+			new EFAClientStopRequest().execute(location);
+		} else {
+			new AlertDialog.Builder(getContext())
+					.setTitle("No Network")
+					.setPositiveButton("OK", null)
+					.show();
+		}
 	}
 	
 	@Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
