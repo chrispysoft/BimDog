@@ -68,7 +68,7 @@ public class DepartureListFragment extends Fragment {
 	
 	private class DepartureListAdapter extends ArrayAdapter<EFAClient.Departure> {
 		public DepartureListAdapter(Context context, ArrayList<EFAClient.Departure> departures) {
-			super(context, R.layout.departure_item, departures);
+			super(context, R.layout.departure_list_item, departures);
 		}
 		@Override public View getView(int position, View convertView, ViewGroup parent) {
 			EFAClient.Departure departure = getItem(position);
@@ -76,7 +76,7 @@ public class DepartureListFragment extends Fragment {
 			if (convertView == null) {
 				viewHolder = new ViewHolder();
 				LayoutInflater inflater = LayoutInflater.from(getContext());
-				convertView = inflater.inflate(R.layout.departure_item, parent, false);
+				convertView = inflater.inflate(R.layout.departure_list_item, parent, false);
 				viewHolder.numberLabel = convertView.findViewById(R.id.numberLabel);
 				viewHolder.directionLabel = convertView.findViewById(R.id.directionLabel);
 				viewHolder.countdownLabel = convertView.findViewById(R.id.countdownLabel);

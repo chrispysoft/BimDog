@@ -88,7 +88,7 @@ public class StopListFragment extends Fragment implements GPSTracker.GPSTrackerL
 	
 	private class StopListAdapter extends ArrayAdapter<EFAClient.Stop> {
 		StopListAdapter(Context context, ArrayList<EFAClient.Stop> stops) {
-			super(context, R.layout.stop_item, stops);
+			super(context, R.layout.stop_list_item, stops);
 		}
 		@Override public View getView(int position, View convertView, ViewGroup parent) {
 			EFAClient.Stop stop = getItem(position);
@@ -96,7 +96,7 @@ public class StopListFragment extends Fragment implements GPSTracker.GPSTrackerL
 			if (convertView == null) {
 				viewHolder = new ViewHolder();
 				LayoutInflater inflater = LayoutInflater.from(getContext());
-				convertView = inflater.inflate(R.layout.stop_item, parent, false);
+				convertView = inflater.inflate(R.layout.stop_list_item, parent, false);
 				viewHolder.stopNameLabel = convertView.findViewById(R.id.stopNameLabel);
 				viewHolder.distanceLabel = convertView.findViewById(R.id.distanceLabel);
 				convertView.setTag(viewHolder);
