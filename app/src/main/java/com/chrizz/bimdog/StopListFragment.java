@@ -68,6 +68,7 @@ public class StopListFragment extends Fragment implements GPSTracker.GPSTrackerL
 		EFAClient.Stop stop = (EFAClient.Stop) parent.getAdapter().getItem(position);
 		Bundle bundle = new Bundle();
 		bundle.putString("stopID", stop.id);
+		bundle.putString("stopName", stop.name);
 		Navigation.findNavController(view).navigate(R.id.departureListFragment, bundle);
 	}
 	

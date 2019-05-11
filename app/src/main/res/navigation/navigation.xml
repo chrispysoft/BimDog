@@ -8,11 +8,17 @@
     <fragment
         android:id="@+id/stopListFragment"
         android:name="com.chrizz.bimdog.StopListFragment"
-        android:label="stopListFragment"
-        tools:layout="@layout/stop_list_fragment"/>
+        android:label="@string/app_name"
+        tools:layout="@layout/stop_list_fragment" />
+
     <fragment
         android:id="@+id/departureListFragment"
         android:name="com.chrizz.bimdog.DepartureListFragment"
-        android:label="departureListFragment"
-        tools:layout="@layout/departure_list_fragment" />
+        android:label="{stopName}"
+        tools:layout="@layout/departure_list_fragment" >
+        <argument
+            android:name="stopName"
+            app:argType="string" />
+    </fragment>
+
 </navigation>
