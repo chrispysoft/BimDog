@@ -154,6 +154,9 @@ public class EFAClient {
 		public Departure(String platform, String number, String direction, String countdown) {
 			this.platform = platform; this.number = number; this.direction = direction; this.countdown = countdown;
 		}
+		public Integer getPlatformID() {
+			return new Integer(platform);
+		}
 	}
 	
 }
