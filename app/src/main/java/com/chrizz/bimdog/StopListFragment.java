@@ -80,7 +80,9 @@ public class StopListFragment extends Fragment implements GPSTracker.GPSTrackerL
 		@Override protected void onPostExecute(ArrayList<EFAClient.Stop> result) {
 			super.onPostExecute(result);
 			stops.clear();
-			stops.addAll(result);
+			if (result != null) {
+				stops.addAll(result);
+			}
 			listView.invalidateViews();
 		}
 	}
