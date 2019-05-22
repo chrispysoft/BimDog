@@ -2,7 +2,7 @@ package com.chrizz.bimdog;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +21,8 @@ public class DepartureListFragment extends Fragment {
 	private ListView listView;
 	private DepartureListAdapter listAdapter;
 	private ProgressBar progressBar;
+	private final Handler updateHandler = new Handler();
+	private static final int UPDATE_INTERVAL = 10000;
 	
 	
 	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -30,23 +32,31 @@ public class DepartureListFragment extends Fragment {
 	@Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		stopID = getArguments().getString("stopID");
-		
 		listAdapter = new DepartureListAdapter(view.getContext());
 		listView = getView().findViewById(R.id.departureListView);
 		listView.setAdapter(listAdapter);
-		
 		progressBar = getView().findViewById(R.id.progressBar);
-		
-		updateDepartures();
 	}
 	
-	private void updateDepartures() {
-		new EFAClientDepartureRequest().execute(stopID);
+	@Override public void onResume() {
+		super.onResume();
+		updateHandler.post(updateCode);
 	}
+	
+	@Override public void onPause() {
+		super.onPause();
+		updateHandler.removeCallbacks(updateCode);
+	}
+	
+	private final Runnable updateCode = new Runnable() {
+		@Override public void run() {
+			new EFAClientDepartureRequest().execute(stopID);
+			updateHandler.postDelayed(this, UPDATE_INTERVAL);
+		}
+	};
 	
 	private class EFAClientDepartureRequest extends AsyncTask<String, Void, ArrayList<EFAClient.Departure>> {
 		@Override protected ArrayList<EFAClient.Departure> doInBackground(String... stopIDs) {
-			Log.i("DepartureListFragment", "EFAClientDepartureRequest.doInBackground");
 			return new EFAClient().loadDepartures(stopIDs[0]);
 		}
 		@Override protected void onPreExecute() {
@@ -56,7 +66,6 @@ public class DepartureListFragment extends Fragment {
 			super.onPostExecute(result);
 			progressBar.setVisibility(View.GONE);
 			listAdapter.setDepartures(result);
-			//listView.invalidateViews();
 		}
 	}
 }
