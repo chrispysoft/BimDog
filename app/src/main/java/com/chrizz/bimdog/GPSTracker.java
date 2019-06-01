@@ -17,11 +17,14 @@ import android.os.IBinder;
 import android.provider.Settings;
 import androidx.core.app.ActivityCompat;
 
+import java.util.Locale;
+
 
 public class GPSTracker extends Service implements LocationListener {
 	
 	public interface GPSTrackerListener {
 		void locationUpdated(Location location);
+		void logMessage(String message);
 	}
 	
 	
@@ -60,12 +63,37 @@ public class GPSTracker extends Service implements LocationListener {
 			return;
 		}
 		
-		String provider = locationManager.getBestProvider(new Criteria(), true);
-		Location location = locationManager.getLastKnownLocation(provider);
+		Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		logLocation("init GPS:", location, false);
+		if (location == null) {
+			location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+			logLocation("init NW:", location, false);
+		}
+		
+		checkLocationUpdate(location);
+		
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+	}
+	
+	
+	private void checkLocationUpdate(Location location) {
 		if (location != null) {
 			listener.locationUpdated(location);
+			logLocation("update", location, true);
 		}
-		locationManager.requestLocationUpdates(provider, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+	}
+	
+	private void logLocation(String message, Location location, boolean showProvider) {
+		if (location != null) {
+			if (showProvider) {
+				listener.logMessage(String.format(Locale.ENGLISH,"%s (%s): %.4f,%.4f accuracy: %.1f", message, location.getProvider(), location.getLatitude(), location.getLongitude(), location.getAccuracy()));
+			} else {
+				listener.logMessage(String.format(Locale.ENGLISH,"%s %.4f,%.4f accuracy: %.1f", message, location.getLatitude(), location.getLongitude(), location.getAccuracy()));
+			}
+		} else {
+			listener.logMessage(String.format("%s null", message));
+		}
 	}
 	
 	
@@ -89,7 +117,7 @@ public class GPSTracker extends Service implements LocationListener {
 	
 	
 	@Override public void onLocationChanged(Location location) {
-		listener.locationUpdated(location);
+		checkLocationUpdate(location);
 	}
 	@Override public void onProviderDisabled(String provider) { }
 	@Override public void onProviderEnabled(String provider) { }

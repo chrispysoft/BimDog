@@ -4,6 +4,7 @@ import android.content.Context;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ public class StopListFragment extends Fragment implements GPSTracker.GPSTrackerL
 	private GPSTracker gpsTracker;
 	private ArrayList stops = new ArrayList<EFAClient.Stop>();
 	private ListView listView;
+	private TextView logView;
 	
 	
 	@Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -37,6 +39,9 @@ public class StopListFragment extends Fragment implements GPSTracker.GPSTrackerL
 		listView = getView().findViewById(R.id.stopListView);
 		listView.setAdapter(new StopListAdapter(getContext(), stops));
 		listView.setOnItemClickListener(this);
+		logView = getView().findViewById(R.id.logTextView);
+		logView.setText("");
+		logView.setMovementMethod(new ScrollingMovementMethod());
 		gpsTracker = new GPSTracker(getActivity(), this);
 	}
 	
@@ -62,6 +67,10 @@ public class StopListFragment extends Fragment implements GPSTracker.GPSTrackerL
 					.setPositiveButton("OK", null)
 					.show();
 		}
+	}
+	
+	@Override public void logMessage(String message) {
+		logView.append(message + "\n");
 	}
 	
 	@Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
