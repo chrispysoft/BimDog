@@ -4,6 +4,7 @@ buildscript {
 
     ext {
         navigationVersion = "2.0.0"
+        kotlinVersion = "1.3.31"
     }
 
     repositories {

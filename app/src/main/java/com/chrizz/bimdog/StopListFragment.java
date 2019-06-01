@@ -48,13 +48,13 @@ public class StopListFragment extends Fragment implements GPSTracker.GPSTrackerL
 	@Override public void onResume() {
 		super.onResume();
 		Log.i("StopListFragment", "onResume");
-		gpsTracker.startUpdatingLocation();
+		gpsTracker.startLocationUpdates();
 	}
 	
 	@Override public void onPause() {
 		super.onPause();
 		Log.i("StopListFragment", "onPause");
-		gpsTracker.stopUpdatingLocation();
+		gpsTracker.stopLocationUpdates();
 	}
 	
 	@Override public void locationUpdated(Location location) {
