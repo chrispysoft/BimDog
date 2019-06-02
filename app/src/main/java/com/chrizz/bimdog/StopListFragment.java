@@ -19,7 +19,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import java.util.ArrayList;
 import com.chrizz.bimdog.com.chrizz.bimdog.efa.EFAClient;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -62,14 +61,14 @@ public class StopListFragment extends Fragment implements GPSTracker.GPSTrackerL
 	@Override public void onResume() {
 		super.onResume();
 		Log.i("StopListFragment", "onResume");
-		gpsTracker.startLocationUpdates();
+		gpsTracker.start();
 		mapView.onResume();
 	}
 	
 	@Override public void onPause() {
 		super.onPause();
 		Log.i("StopListFragment", "onPause");
-		gpsTracker.stopLocationUpdates();
+		gpsTracker.stop();
 		mapView.onPause();
 	}
 	

@@ -14,6 +14,7 @@ import android.os.Bundle
 import android.os.IBinder
 import android.provider.Settings
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import java.util.Locale
 
 
@@ -25,8 +26,8 @@ class GPSTracker (private val context: Context, private val listener: GPSTracker
     }
 
     companion object {
-        private const val REQUEST_CODE_PERMISSION = 2
-        private const val MANIFEST_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION
+        private const val LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION
+        private const val PERMISSION_REQUEST_CODE = 0
         private const val MIN_DISTANCE_CHANGE_FOR_UPDATES: Long = 10
         private const val MIN_TIME_BW_UPDATES: Long = 1000 * 3
     }
@@ -34,7 +35,7 @@ class GPSTracker (private val context: Context, private val listener: GPSTracker
 
     private val locationManager: LocationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-    fun startLocationUpdates() {
+    fun start() {
         listener.logMessage("start")
 
         if (! isLocationServiceEnabled) {
@@ -47,9 +48,9 @@ class GPSTracker (private val context: Context, private val listener: GPSTracker
                     .show()
             return
         }
-        
-        if (ActivityCompat.checkSelfPermission(context, MANIFEST_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(context as Activity, arrayOf(MANIFEST_PERMISSION), REQUEST_CODE_PERMISSION)
+
+        if (ActivityCompat.checkSelfPermission(context, LOCATION_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(context as Activity, arrayOf(LOCATION_PERMISSION), PERMISSION_REQUEST_CODE)
             return
         }
 
@@ -73,7 +74,7 @@ class GPSTracker (private val context: Context, private val listener: GPSTracker
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES.toFloat(), this)
     }
 
-    fun stopLocationUpdates() {
+    fun stop() {
         listener.logMessage("stop")
         locationManager.removeUpdates(this@GPSTracker)
     }
