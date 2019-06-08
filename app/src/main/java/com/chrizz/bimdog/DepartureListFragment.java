@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class DepartureListFragment extends Fragment {
 	
-	private String stopID;
+	private Integer stopID;
 	private ListView listView;
 	private DepartureListAdapter listAdapter;
 	private ProgressBar progressBar;
@@ -31,7 +31,7 @@ public class DepartureListFragment extends Fragment {
 	
 	@Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		stopID = getArguments().getString("stopID");
+		stopID = getArguments().getInt("stopID");
 		listAdapter = new DepartureListAdapter(view.getContext());
 		listView = getView().findViewById(R.id.departureListView);
 		listView.setAdapter(listAdapter);
@@ -55,8 +55,8 @@ public class DepartureListFragment extends Fragment {
 		}
 	};
 	
-	private class EFAClientDepartureRequest extends AsyncTask<String, Void, ArrayList<EFAClient.Departure>> {
-		@Override protected ArrayList<EFAClient.Departure> doInBackground(String... stopIDs) {
+	private class EFAClientDepartureRequest extends AsyncTask<Integer, Void, ArrayList<EFAClient.Departure>> {
+		@Override protected ArrayList<EFAClient.Departure> doInBackground(Integer... stopIDs) {
 			return new EFAClient().loadDepartures(stopIDs[0]);
 		}
 		@Override protected void onPreExecute() {

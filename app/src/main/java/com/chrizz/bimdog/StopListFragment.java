@@ -87,7 +87,7 @@ public class StopListFragment extends Fragment implements GPSTracker.GPSTrackerL
 		currentLocation = location;
 		updateMap();
 		
-		if (EFAClient.canAccessNetwork(getActivity())) {
+		if (EFAClient.Companion.canAccessNetwork(getActivity())) {
 			new EFAClientStopRequest().execute(location);
 		} else {
 			new AlertDialog.Builder(getContext())
@@ -104,8 +104,8 @@ public class StopListFragment extends Fragment implements GPSTracker.GPSTrackerL
 	@Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		EFAClient.Stop stop = (EFAClient.Stop) parent.getAdapter().getItem(position);
 		Bundle bundle = new Bundle();
-		bundle.putString("stopID", stop.id);
-		bundle.putString("stopName", stop.name);
+		bundle.putInt("stopID", stop.getId());
+		bundle.putString("stopName", stop.getName());
 		Navigation.findNavController(view).navigate(R.id.departureListFragment, bundle);
 	}
 	
@@ -158,8 +158,8 @@ public class StopListFragment extends Fragment implements GPSTracker.GPSTrackerL
 			} else {
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
-			viewHolder.stopNameLabel.setText(stop.name);
-			viewHolder.distanceLabel.setText(stop.distance + " m");
+			viewHolder.stopNameLabel.setText(stop.getName());
+			viewHolder.distanceLabel.setText(stop.getDistance() + " m");
 			return convertView;
 		}
 	}

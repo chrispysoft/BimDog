@@ -32,13 +32,13 @@ public class DepartureListAdapter extends BaseAdapter {
 		
 		departures.sort(new Comparator<Departure>() {
 			@Override public int compare(Departure d1, Departure d2) {
-				return d1.getPlatformID().compareTo(d2.getPlatformID());
+				return new Integer(d1.getPlatform()).compareTo(d2.getPlatform());
 			}
 		});
 		
 		Integer lastPlatformID = null;
 		for (Departure departure : departures) {
-			int currPlatformID = departure.getPlatformID();
+			int currPlatformID = departure.getPlatform();
 			if (lastPlatformID == null || lastPlatformID != currPlatformID) {
 				addHeader(currPlatformID);
 				lastPlatformID = currPlatformID;
@@ -51,9 +51,9 @@ public class DepartureListAdapter extends BaseAdapter {
 	
 	private void addItem(Departure departure) {
 		DataContainer container = new DataContainer(TYPE_ITEM);
-		container.number = departure.number;
-		container.direction = departure.direction;
-		container.countdown = departure.countdown;
+		container.number = departure.getNumber();
+		container.direction = departure.getDirection();
+		container.countdown = departure.getCountdown();
 		dataContainers.add(container);
 	}
 	
