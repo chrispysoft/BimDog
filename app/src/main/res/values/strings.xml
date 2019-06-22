@@ -2,8 +2,7 @@
     <string name="app_name">BimDog</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="nolocation_title">Location Services disabled</string>
     <string name="nolocation_message">Please enable Location Services</string>
-
+    <string name="nonetwork_message">No Network</string>
 </resources>
