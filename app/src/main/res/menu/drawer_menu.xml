@@ -6,14 +6,11 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_home"
-            android:title="Foo" />
+            android:id="@+id/nav_stoplist"
+            android:title="Stop List" />
         <item
-            android:id="@+id/nav_gallery"
-            android:title="Bar" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:title="Baz" />
+            android:id="@+id/nav_test"
+            android:title="Test" />
     </group>
 
 </menu>

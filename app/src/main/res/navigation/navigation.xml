@@ -21,4 +21,10 @@
             app:argType="string" />
     </fragment>
 
+    <fragment
+        android:id="@+id/testFragment"
+        android:name="com.chrizz.bimdog.TestFragment"
+        android:label="TestFragment"
+        tools:layout="@layout/test_fragment" />
+
 </navigation>

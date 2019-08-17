@@ -6,12 +6,14 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
+import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private var toggle: ActionBarDrawerToggle? = null
 
@@ -21,17 +23,20 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
 
+
         val navController = Navigation.findNavController(this, R.id.navHostFragment)
         NavigationUI.setupActionBarWithNavController(this, navController, drawer_layout)
+        navigationView.setNavigationItemSelectedListener(this)
 
         toggle = object : ActionBarDrawerToggle(this, drawer_layout, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             override fun onDrawerStateChanged(newState: Int) {
                 super.onDrawerStateChanged(newState)
-                toggle!!.syncState()
+                toggle?.syncState()
             }
         }
         drawer_layout.addDrawerListener(toggle!!)
         toggle!!.syncState()
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -54,6 +59,33 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         Log.i("MainActivity", "onSupportNavigateUp")
         return Navigation.findNavController(this, R.id.navHostFragment).navigateUp()
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        Log.i("MainActivity", String.format("onNavigationItemSelected: %d", item.itemId))
+        when (item.itemId) {
+            R.id.nav_stoplist -> navigate(NavDest.StopList)
+            R.id.nav_test -> navigate(NavDest.TestFrag)
+            else -> return false
+        }
+
+        val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
+        drawer.closeDrawer(GravityCompat.START)
+        return true
+    }
+
+
+    private enum class NavDest {
+        StopList, TestFrag
+    }
+
+    private fun navigate(destination: NavDest) {
+        val destId: Int
+        when (destination) {
+            NavDest.StopList -> destId = R.id.stopListFragment
+            NavDest.TestFrag -> destId = R.id.testFragment
+        }
+        Navigation.findNavController(this, R.id.navHostFragment).navigate(destId)
     }
 
 }
